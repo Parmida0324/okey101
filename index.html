@@ -18,7 +18,7 @@ body::before {
 content: "";
 position: fixed;
 inset: 0;
-background-image: url("dragon.png"); /* تصویر اژدهای قرمز */
+background-image: url("dragon.png"); /* مطمئن شو فایل dragon.png هم آپلود شده */
 background-repeat: no-repeat;
 background-position: center;
 background-size: 70%;
@@ -69,7 +69,7 @@ box-shadow: 0 0 5px #ff3b3b;
 }
 
 button {
-margin-top: 25px;
+margin-top: 15px;
 width: 100%;
 padding: 12px;
 background: linear-gradient(135deg, #8b0000, #ff0000);
@@ -121,9 +121,9 @@ z-index: 1000;
 </div>
 
 <button onclick="calculate()">محاسبه نهایی</button>
-<div class="result" id="result"></div>
+<button onclick="clearAll()">پاک کردن همه</button>
 
-<!-- اسم Parmida پایین سمت راست -->
+<div class="result" id="result"></div>
 <div id="signature">Parmida</div>
 
 <script>
@@ -139,7 +139,7 @@ box.appendChild(input);
 }
 }
 
-// تابع جمع خودکار با قانون صفرها
+// جمع خودکار با قانون صفرها
 function autoCalc(input) {
 const parts = input.value.split("+");
 let sum = 0;
@@ -148,11 +148,8 @@ let zeroCount = 0;
 parts.forEach(p => {
 const v = parseInt(p.trim());
 if (!isNaN(v)) {
-if (v === 0) {
-zeroCount++;
-} else {
-sum += v;
-}
+if (v === 0) zeroCount++;
+else sum += v;
 }
 });
 
@@ -160,14 +157,12 @@ sum -= zeroCount * 101;
 input.value = sum;
 }
 
-// محاسبه جمع کل هر تیم
+// جمع کل هر تیم
 function total(id) {
 let sum = 0;
 document.querySelectorAll("#" + id + " .cell").forEach(c => {
 const v = parseInt(c.value);
-if (!isNaN(v)) {
-sum += v;
-}
+if (!isNaN(v)) sum += v;
 });
 return sum;
 }
@@ -188,7 +183,18 @@ document.getElementById("result").innerText =
 n1 + ": " + t1 + " | " + n2 + ": " + t2 + " → برنده: " + win;
 }
 
-// ایجاد سلول‌ها برای هر تیم
+// پاک کردن همه سلول‌ها
+function clearAll() {
+document.querySelectorAll(".cell").forEach(c => c.value = "");
+document.getElementById("result").innerText = "";
+}
+
+// پاک شدن خودکار هنگام باز شدن صفحه
+window.onload = function() {
+clearAll();
+}
+
+// ایجاد سلول‌ها
 createCells("team1");
 createCells("team2");
 </script>
