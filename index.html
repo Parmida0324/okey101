@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Okey 101</title>
+
+<style>
+body {
+background: #0b0b0b;
+font-family: sans-serif;
+color: #eee;
+padding: 20px;
+}
+
+/* تصویر اژدها */
+body::before {
+content: "";
+position: fixed;
+inset: 0;
+background-image: url("dragon.png"); /* تصویر اژدهای قرمز */
+background-repeat: no-repeat;
+background-position: center;
+background-size: 70%;
+opacity: 0.08;
+z-index: -1;
+}
+
+.container {
+display: flex;
+justify-content: center;
+gap: 20px;
+}
+
+.team {
+background: rgba(0,0,0,0.85);
+border: 1px solid #7a0000;
+border-radius: 12px;
+padding: 15px;
+width: 170px;
+}
+
+.team-name {
+width: 100%;
+margin-bottom: 10px;
+text-align: center;
+font-weight: bold;
+background: black;
+color: #ff3b3b;
+border: 1px solid #7a0000;
+border-radius: 6px;
+}
+
+.cell {
+width: 100%;
+margin-bottom: 6px;
+text-align: center;
+background: black;
+color: #eee;
+border: 1px solid #444;
+border-radius: 5px;
+padding: 4px;
+}
+
+.cell:focus {
+outline: none;
+border-color: #ff3b3b;
+box-shadow: 0 0 5px #ff3b3b;
+}
+
+button {
+margin-top: 25px;
+width: 100%;
+padding: 12px;
+background: linear-gradient(135deg, #8b0000, #ff0000);
+color: white;
+border: none;
+border-radius: 10px;
+font-size: 16px;
+cursor: pointer;
+}
+
+button:hover {
+opacity: 0.9;
+}
+
+.result {
+margin-top: 20px;
+text-align: center;
+color: #ff3b3b;
+font-size: 18px;
+}
+
+/* اسم Parmida پایین سمت راست */
+#signature {
+position: fixed;
+bottom: 10px;
+right: 10px;
+font-size: 14px;
+color: #ff3b3b;
+opacity: 0.7;
+pointer-events: none;
+font-weight: bold;
+z-index: 1000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="team" id="team1">
+<input class="team-name" value="Team A">
+<div class="cells"></div>
+</div>
+
+<div class="team" id="team2">
+<input class="team-name" value="Team B">
+<div class="cells"></div>
+</div>
+</div>
+
+<button onclick="calculate()">محاسبه نهایی</button>
+<div class="result" id="result"></div>
+
+<!-- اسم Parmida پایین سمت راست -->
+<div id="signature">Parmida</div>
+
+<script>
+// ایجاد 11 سلول برای هر تیم
+function createCells(id) {
+const box = document.querySelector("#" + id + " .cells");
+for (let i = 0; i < 11; i++) {
+const input = document.createElement("input");
+input.className = "cell";
+input.placeholder = "دست " + (i+1);
+input.onblur = () => autoCalc(input);
+box.appendChild(input);
+}
+}
+
+// تابع جمع خودکار با قانون صفرها
+function autoCalc(input) {
+const parts = input.value.split("+");
+let sum = 0;
+let zeroCount = 0;
+
+parts.forEach(p => {
+const v = parseInt(p.trim());
+if (!isNaN(v)) {
+if (v === 0) {
+zeroCount++;
+} else {
+sum += v;
+}
+}
+});
+
+sum -= zeroCount * 101;
+input.value = sum;
+}
+
+// محاسبه جمع کل هر تیم
+function total(id) {
+let sum = 0;
+document.querySelectorAll("#" + id + " .cell").forEach(c => {
+const v = parseInt(c.value);
+if (!isNaN(v)) {
+sum += v;
+}
+});
+return sum;
+}
+
+// محاسبه نهایی و اعلام برنده
+function calculate() {
+const t1 = total("team1");
+const t2 = total("team2");
+
+const n1 = document.querySelector("#team1 .team-name").value;
+const n2 = document.querySelector("#team2 .team-name").value;
+
+let win = "مساوی";
+if (t1 < t2) win = n1;
+if (t2 < t1) win = n2;
+
+document.getElementById("result").innerText =
+n1 + ": " + t1 + " | " + n2 + ": " + t2 + " → برنده: " + win;
+}
+
+// ایجاد سلول‌ها برای هر تیم
+createCells("team1");
+createCells("team2");
+</script>
+
+</body>
+</html>
